@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>UMAI-Interest Calculator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div class="container-fluid" style="height: 250px; background-color: #0099ff;  margin-bottom: -130px;">
+    <center>
+      <img class="img-responsive" src="img/UMAI.png" height="50px" width="200px;" style="padding-top: 30px; padding-bottom: 30px;"/>
+    </center>
+  </div>
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div ng-app="iCalc" ng-controller="interestCtrl" ng-init="disable=true;disableTimeType=true;show=false;hide=true" class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1" style="background-color: white; box-shadow: 0 0 10px #000;">
+        <h2 style="padding-top: 25px; color: #0099ff; text-align: center;">
+          <div ng-switch="type">
+            <div ng-switch-when="simple">SIMPLE<br/></div>
+            <div ng-switch-when="compound">COMPOUND<br/></div>
+          </div>
+          INTEREST CALCULATOR
+        </h2>
+        <p style="text-align: center; padding-bottom: 20px;"><i>*Note: Empty fields are considered as zero valued</i></p>
+<!-- Form starts here -->
+        <form>
+
+<!-- radio button type of interest calculation -->
+          <div class="form-group">
+            <div class="radio custom-width-center">
+              <label class="radio-inline"><input type="radio" ng-model="type" ng-change="disable=false" ng-click="clearAll();show=false;hide=true" name="type" value="simple">Simple</label>
+              <label class="radio-inline"><input type="radio" ng-model="type" ng-change="disable=false" ng-click="clearAll();show=false;hide=false" name="type" value="compound">Compound</label>
+            </div>
+          </div>
+
+<!-- text box Principal -->
+          <div class="form-group">
+            <div class="input-group custom-width-center">
+              <span class="input-group-addon" style="width: 15%;">$</span>
+              <input type="text" ng-model="principal" ng-disabled="disable" ng-focus="show=false" class="form-control" id="principal" placeholder="Principal Amount" onkeypress="return isNumber(event)">
+            </div>
+          </div>
+
+<!-- text box Rate of Interest -->
+          <div class="form-group">
+            <div class="input-group custom-width-center">
+              <span class="input-group-addon" style="width: 15%;">%</span>
+              <input type="text" ng-model="rate" ng-disabled="disable" ng-focus="show=false" class="form-control" id="rate" placeholder="Rate of Interest" onkeypress="return isNumber(event)">
+            </div>
+          </div>
+
+<!-- text box no of times (CI) -->
+          <div class="form-group" ng-hide="hide">
+            <div class="input-group custom-width-center">
+              <span class="input-group-addon" style="width: 15%;">#</span>
+              <input type="text" ng-model="no" ng-disabled="disable" ng-focus="show=false" class="form-control" placeholder="No of Compounds" onkeypress="return isNumber(event)">
+            </div>
+          </div>
+
+<!-- time format -->
+          <div class="form-group">
+            <div class="custom-width-center"><h4 style="color: #0099ff;"> Time period:</h4></div>
+            <div class="radio custom-width-center" style="padding-bottom: 15px;">
+              <label class="radio-inline"><input ng-model="timeType" ng-change="disableTimeType=false" ng-click="show=false" ng-disabled="disable" type="radio" name="timeType" value="years">Years</label>
+              <label class="radio-inline"><input ng-model="timeType" ng-change="disableTimeType=false" ng-click="show=false" ng-disabled="disable" type="radio" name="timeType" value="months">Months</label>
+              <label class="radio-inline"><input ng-model="timeType" ng-change="disableTimeType=false" ng-click="show=false" ng-disabled="disable" type="radio" name="timeType" value="weeks">Weeks</label>
+            </div>
+            <div class="radio custom-width-center">
+              <label class="radio-inline"><input ng-model="timeType" ng-change="disableTimeType=false" ng-click="show=false" ng-disabled="disable" type="radio" name="timeType" value="days">Days</label>
+            </div>          
+          </div>
+<!-- text box Time -->
+          <div class="form-group">
+            <div class="input-group custom-width-center">
+              <span class="input-group-addon" style="width: 15%;">T</span>
+              <input type="text" ng-model="time" ng-disabled="disableTimeType" ng-focus="show=false" class="form-control" id="time" placeholder="Period in {{ timeType }}" onkeypress="return isNumber(event)">
+              <span class="input-group-addon" style="width: 30%;">{{ timeType }}</span>
+            </div>
+          </div>
+        </form>
+
+<!-- Buttons -->
+        <center>
+          <button ng-click="show=true" class="btn btn-default" ng-disabled="disable" style="text-align: center; margin-bottom: 25px; ">Calculate</button>
+          <button ng-click="clearAllX();show=false" class="btn btn-danger" style="text-align: center; margin-bottom: 25px; ">Reset</button>
+        </center>
+
+<!-- output displayed here -->
+        <div class="custom-width-center" ng-show="show" style="text-align: center;">
+          <div ng-switch="type">
+            <div ng-switch-when="simple">
+              <h4 style="color: black; margin-bottom: 15px;"><b style="color: #0099ff; font-weight: normal;">Total Amount: </b> {{ simple(principal*1, rate*1, year()*1) + principal *1 | currency }}</h4>
+              <h4 style="color: black; padding-bottom: 25px;"><b style="color: #0099ff; font-weight: normal;">Interest:</b> {{ simple(principal*1, rate*1, year()*1) | currency }}</h4>
+            </div>
+            <div ng-switch-when="compound">
+              <h4 style="color: black; margin-bottom: 15px;"><b style="color: #0099ff; font-weight: normal;">Total Amount:</b> {{ compound(principal, rate, year(), no) | currency }}</h4>
+              <h4 style="color: black; padding-bottom: 25px;"><b style="color: #0099ff; font-weight: normal;">Interest:</b> {{ compound(principal, rate, year(), no) - principal | currency }}</h4>
+            </div>
+          </div> 
+        </div> 
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid footer" style="margin-top: 30px; text-align: center;">
+    <p>All Rights Reserved</p>
+  </div>
+  <!-- JS's are added here -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
