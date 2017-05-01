@@ -1,10 +1,7 @@
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        if (charCode === 46 || charCode === 37 || charCode === 39) {
-            return true;
-        }
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode === 46)) {
         return false;
     }
     return true;
@@ -14,9 +11,6 @@ function isNumberWODot(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        if (charCode === 37 || charCode === 39) {
-            return true;
-        }
         return false;
     }
     return true;
