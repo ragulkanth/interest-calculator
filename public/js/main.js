@@ -2,6 +2,21 @@ function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        if (charCode === 46 || charCode === 37 || charCode === 39) {
+            return true;
+        }
+        return false;
+    }
+    return true;
+}
+
+function isNumberWODot(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        if (charCode === 37 || charCode === 39) {
+            return true;
+        }
         return false;
     }
     return true;
@@ -10,40 +25,34 @@ function isNumber(evt) {
 /* AngularJS app controllers */
 var app = angular.module('iCalc', []);
 app.controller('interestCtrl', function($scope) {
-  $scope.principal;
-  $scope.rate;
-  $scope.time; 
-  $scope.type; 
-  $scope.timeType;
-  $scope.no;
   $scope.year = function() {
-      if($scope.timeType=="years") {
-        return $scope.time;
+      if($scope.timeType==="years") {
+        return parseFloat($scope.time);
       }
-      if($scope.timeType=="months") {
-        return $scope.time / 12;
+      if($scope.timeType==="months") {
+        return parseFloat($scope.time / 12);
       }
-      if($scope.timeType=="weeks") {
-        return $scope.time / 52;
+      if($scope.timeType==="weeks") {
+        return parseFloat($scope.time) / 52;
       }
-      if($scope.timeType=="days") {
-        return $scope.time / 365;
+      if($scope.timeType==="days") {
+        return parseFloat($scope.time) / 365;
       }
   };
   $scope.simple = function(principal, rate, year) {
-      if ( principal=="" || rate=="" || year=="") {
+      if ( principal==="" || rate==="" || year==="") {
          return 0;
       } 
-      return principal * (rate / 100) * year;
+      return parseFloat(principal) * (parseFloat(rate) / 100) * year;
   };
   $scope.compound = function(p, rate, year, n) {
-      if ( p=="" || rate=="" || year=="" || n=="") {
+      if ( p==="" || rate==="" || year==="" || n==="") {
          return 0;
       } 
-      p = p * 1;
-      rate = rate * 1 / 100;
-      year = year *1;
-      n = n * 1;
+      p = parseFloat(p) * 1;
+      rate = parseFloat(rate) * 1 / 100;
+      year = year * 1;
+      n = parseFloat(n) * 1;
       nt = n * year;
       rn = rate / n;
       a = 1 + rn;
@@ -60,6 +69,7 @@ app.controller('interestCtrl', function($scope) {
   };
   $scope.clearAllX = function() {
     $scope.disable = true;
+    $scope.hide = true;
     $scope.disableTimeType = true;
     $scope.type = "";
     $scope.principal = "";

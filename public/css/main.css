@@ -1,32 +1,4 @@
-.bg {
-    background-image: url(img/bg.svg);
-}
-
-.parallax {
-    height: 100%;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.viewport-height {
-    height: 100vh;
-    min-height: 100vh;
-}
-
 .custom-width-center {
     width: 240px;
     margin: 0 auto;
 }
-.custom-width {
-    width: 240px;
-}
-
-.footer {
-   left:0px;
-   bottom:0px;
-   height:30px;
-   width:100%;
-}
-
